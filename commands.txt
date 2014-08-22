@@ -1,0 +1,2 @@
+/user/dev/data/raw_text/a.txt|gzip __filename__
+/user/dev/data/raw_text/b.txt|gzip __filename__
