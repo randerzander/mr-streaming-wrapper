@@ -3,15 +3,18 @@ from subprocess import call
 import sys
 
 for line in sys.stdin:
-  tokens = line.strip().split('|')
-  path = tokens[0]
+  path = line.strip()
   filename = path.split('/')[-1]
-  command = tokens[1].replace('__filename__', filename)
+  command = 'gzip ' + filename
+
+  # Get the input file from HDFS
   sys.stderr.write('getting ' + path + ' from hdfs\n')
   call(['hadoop', 'fs', '-get', path])
   sys.stderr.write('got ' + filename + ' from hdfs, running ' + command + '\n')
+
+  # Execute command
   call(command.split(' '))
-  #you need to know what the output filename will be to put it back in HDFS
   sys.stderr.write('writing ' + filename + '.gz to hdfs\n')
-  #make sure the converted directory is writable by your running streaming job
+
+  # Put the result into HDFS
   call(['hadoop', 'fs', '-put', filename + '.gz', '/user/dev/converted/'])
