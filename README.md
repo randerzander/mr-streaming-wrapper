@@ -1,4 +1,12 @@
-An example of using a Python wrapper script to run arbitrary executables against files stored in HDFS
+An example of using a Python wrapper script to run arbitrary executables against files stored in HDFS. For example, this wrapper could be used to simultaneously perform OCR on a large number of PDFs, perform video or audio transcoding, etc. using any application that can be controlled via the CLI. The advantage is that there is no need to modify the application to work with Hadoop.
+
+It works as follows:
+
+The "inputs" folder contains one file per unit of work to be performed in parallel. Each file should contain the HDFS URI of a source file.
+
+Because source files are enumerated in independent files, the MR job can run with as many mappers as there are files in the "inputs" folder.
+
+Map tasks run wrapper.py, which receives the HDFS URI of a source file, performs an HDFS get, and runs an arbitrary shell process against it. Whatever form the output takes is stored in the "converted" folder.
 
 Example:
 ```
